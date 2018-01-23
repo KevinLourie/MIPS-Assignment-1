@@ -1,8 +1,11 @@
 	.file	1 "toStringReverse.c"
 
 	.lcomm	number.0,100
+	.data
+	number.0:
+
 	.text
-	.align	2
+#	.align	2
 	.globl	main
 	.ent	main
 main:
@@ -13,7 +16,7 @@ main:
 	sw	$31,20($sp)
 	sw	$fp,16($sp)
 	move	$fp,$sp
-	jal	__main
+#	jal	__main
 	li	$4,73			# 0x49
 	la	$5,number.0
 	jal	itoa
@@ -22,9 +25,9 @@ main:
 	lw	$31,20($sp)
 	lw	$fp,16($sp)
 	addu	$sp,$sp,24
-	j	$31
-	.end	main
-	.align	2
+	jr	$31
+#	.end	main
+#	.align	2
 	.globl	itoa
 	.ent	itoa
 itoa:
@@ -103,9 +106,9 @@ $L8:
 	lw	$31,28($sp)
 	lw	$fp,24($sp)
 	addu	$sp,$sp,32
-	j	$31
+	jr	$31
 	.end	itoa
-	.align	2
+#	.align	2
 	.globl	reverse_string
 	.ent	reverse_string
 reverse_string:
@@ -161,5 +164,5 @@ $L11:
 	move	$sp,$fp
 	lw	$fp,16($sp)
 	addu	$sp,$sp,24
-	j	$31
+	jr	$31
 	.end	reverse_string
