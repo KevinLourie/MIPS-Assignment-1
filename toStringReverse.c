@@ -31,7 +31,7 @@ void itoa(int n, char s[]) {
 char* reverse_string(char *str, int len) {
     int i;
     int k = len - 1;
-
+    
     for(i = 0; i < len/2; i++) {
         char temp = str[k];
         str[k] = str[i];
