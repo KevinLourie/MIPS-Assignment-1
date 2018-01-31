@@ -68,11 +68,11 @@ $L3:
 	nop
 	.set	reorder
 $L4:
-	lw	$5,16($fp)
-	move	$3,$5
-	lw	$2,36($fp)
-	addu	$6,$3,$2
-	lw	$4,32($fp)
+	lw	$5,16($fp)		
+	move	$3,$5			
+	lw	$2,36($fp)		
+	addu	$6,$3,$2		
+	lw	$4,32($fp)		
 	li	$2,1717960704			# 0x66660000
 	ori	$2,$2,0x6667
 	mult	$4,$2
@@ -131,14 +131,14 @@ reverse_string:
 	.mask	0x40000000,-8
 	.fmask	0x00000000,0
 	subu	$sp,$sp,24
-	sw	$fp,16($sp)
+	sw	$fp,16($sp)		
 	move	$fp,$sp
-	sw	$4,24($fp)
-	sw	$5,28($fp)
-	lw	$2,28($fp)
-	addu	$2,$2,-1
-	sw	$2,4($fp)
-	sw	$0,0($fp)
+	sw	$4,24($fp)		# Store 1st parameter str into r4
+	sw	$5,28($fp)		# Store 2nd parameter len into r5
+	lw	$2,28($fp)		# Load r2 with i
+	addu	$2,$2,-1		# k = len - 1
+	sw	$2,4($fp)		
+	sw	$0,0($fp)		
 $L10:
 	lw	$3,28($fp)
 	sra	$2,$3,31
