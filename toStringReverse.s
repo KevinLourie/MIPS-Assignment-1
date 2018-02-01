@@ -68,21 +68,21 @@ $L3:
 	nop
 	.set	reorder
 $L4:
-	lw	$5,16($fp)		
-	move	$3,$5			
-	lw	$2,36($fp)		
-	addu	$6,$3,$2		
+	lw	$5,16($fp)			
+	move	$3,$5				# Move contents of r5 into r3
+	lw	$2,36($fp)			
+	addu	$6,$3,$2			# Add r3 to r2, store in r6
 	lw	$4,32($fp)		
 	li	$2,1717960704			# 0x66660000
 	ori	$2,$2,0x6667
-	mult	$4,$2
-	mfhi	$2
+	mult	$4,$2				# Multiply r4 by r2
+	mfhi	$2				
 	sra	$3,$2,2
 	sra	$2,$4,31
 	subu	$3,$3,$2
-	move	$2,$3
+	move	$2,$3				# Move contents of r3 into r2
 	sll	$2,$2,2
-	addu	$2,$2,$3
+	addu	$2,$2,$3			# Add r2 to r3 and store in r2
 	sll	$2,$2,1
 	subu	$2,$4,$2
 	addu	$2,$2,48
@@ -110,17 +110,17 @@ $L4:
 	addu	$3,$3,1
 	sw	$3,16($fp)
 $L8:
-	lw	$2,36($fp)
-	lw	$3,16($fp)
-	addu	$2,$2,$3
+	lw	$2,36($fp)		# Load r2 with  n % 10
+	lw	$3,16($fp)		# Load r3 with '\0'
+	addu	$2,$2,$3		# Add '0' to n % 10
 	sb	$0,0($2)
-	lw	$4,36($fp)
-	lw	$5,16($fp)
-	jal	reverse_string
-	move	$sp,$fp 
+	lw	$4,36($fp)		# Load lst parameter n into r4
+	lw	$5,16($fp)		# Load 2nd parameter s into r5
+	jal	reverse_string		# Call reverse string
+	move	$sp,$fp 		# Restore stack
 	lw	$31,28($sp)
 	lw	$fp,24($sp)
-	addu	$sp,$sp,32
+	addu	$sp,$sp,32		# Add 32 to stack pointer
 	jr	$31
 	.end	itoa
 #	.align	2
@@ -133,9 +133,11 @@ reverse_string:
 	subu	$sp,$sp,24
 	sw	$fp,16($sp)		
 	move	$fp,$sp
+	# char* reverse_string(char *str, int len)
 	sw	$4,24($fp)		# Store 1st parameter str into r4
-	sw	$5,28($fp)		# Store 2nd parameter len into r5
+	# int i;
 	lw	$2,28($fp)		# Load r2 with i
+	# int k = len - 1;
 	addu	$2,$2,-1		# k = len - 1
 	sw	$2,4($fp)		
 	sw	$0,0($fp)		
