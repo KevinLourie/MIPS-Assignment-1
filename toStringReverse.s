@@ -84,30 +84,30 @@ $L4:
 	sll	$2,$2,2
 	addu	$2,$2,$3			# Add r2 to r3 and store in r2
 	sll	$2,$2,1
-	subu	$2,$4,$2
-	addu	$2,$2,48
-	sb	$2,0($6)
-	addu	$5,$5,1
-	sw	$5,16($fp)
-	lw	$4,32($fp)
+	subu	$2,$4,$2			# Subtract contents of r4 by contents of r2 and store in r2
+	addu	$2,$2,48			# Add 48 to r2 and store in r2
+	sb	$2,0($6)			
+	addu	$5,$5,1				# Add 1 to r5 and store in r5
+	sw	$5,16($fp)			# Save second parameter n
+	lw	$4,32($fp)			# Load first parameter s
 	li	$2,1717960704			# 0x66660000
 	ori	$2,$2,0x6667
-	mult	$4,$2
-	mfhi	$2
-	sra	$3,$2,2
+	mult	$4,$2				# Multiply contents of r4 by r2
+	mfhi	$2	
+	sra	$3,$2,2		
 	sra	$2,$4,31
-	subu	$2,$3,$2
-	sw	$2,32($fp)
+	subu	$2,$3,$2	`		# Subtract contents of r3 by r2 and store in r2
+	sw	$2,32($fp)			
 	bgtz	$2,$L4
 	lw	$2,20($fp)
-	bgez	$2,$L8
+	bgez	$2,$L8				# Branch is r2 is greater than 0
 	lw	$3,16($fp)
-	move	$4,$3
+	move	$4,$3				# Move r3 into r4
 	lw	$2,36($fp)
-	addu	$4,$4,$2
+	addu	$4,$4,$2			# Add r4 and r2 and store in r2
 	li	$2,45			# 0x2d
 	sb	$2,0($4)
-	addu	$3,$3,1
+	addu	$3,$3,1				# Add 1 to r3 and store in r3
 	sw	$3,16($fp)
 $L8:
 	lw	$2,36($fp)		# Load r2 with  n % 10
@@ -154,16 +154,16 @@ $L10:
 $L13:
 	lw	$3,24($fp)
 	lw	$2,4($fp)
-	addu	$2,$3,$2
+	addu	$2,$3,$2			# Add r2 and r3 and store in r2
 	lbu	$2,0($2)
-	sb	$2,8($fp)
+	sb	$2,8($fp)	
 	lw	$3,24($fp)
 	lw	$2,4($fp)
-	addu	$4,$3,$2
+	addu	$4,$3,$2			# Add r3 and r2 and store in r4
 	lw	$3,24($fp)
 	lw	$2,0($fp)
-	addu	$2,$3,$2
-	lbu	$2,0($2)
+	addu	$2,$3,$2			# Add r3 and r2 and store in r2
+	lbu	$2,0($2)	
 	sb	$2,0($4)
 	lw	$3,24($fp)
 	lw	$2,0($fp)
@@ -171,10 +171,10 @@ $L13:
 	lbu	$2,8($fp)
 	sb	$2,0($3)
 	lw	$2,4($fp)
-	addu	$2,$2,-1
+	addu	$2,$2,-1			# Subtract 1 from r2
 	sw	$2,4($fp)
-	lw	$2,0($fp)
-	addu	$2,$2,1
+	lw	$2,0($fp)			
+	addu	$2,$2,1				# Add 1 to r2
 	sw	$2,0($fp)
 	j	$L10
 $L11:
