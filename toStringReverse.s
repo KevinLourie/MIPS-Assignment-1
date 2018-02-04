@@ -50,7 +50,7 @@ itoa:
 	sw	$5,36($fp)		# Save 2nd parameter into s
 
 #	int i = 0
-	sw	$0,16($fp)		# Save 0 into n
+	sw	$0,16($fp)		# Save 0 into i
 
 #	int sign = n
 	lw	$2,32($fp)		# Load n into r2
@@ -69,14 +69,14 @@ $L3:
 	.set	reorder
 $L4:
 	# s[i++] = n % 10 + '0';
-	lw	$5,16($fp)			# Load r5 with n
-	move	$3,$5				# Move contents n into r3
+	lw	$5,16($fp)			# Load r5 with i
+	move	$3,$5				# Move i into r3
 	lw	$2,36($fp)			# Load r2 with s
-	addu	$6,$3,$2			# Compute n + s and store in r6
+	addu	$6,$3,$2			# Compute i + s and store in r6
 	lw	$4,32($fp)			# Load r4 with n
-	li	$2,1717960704			# 0x66660000
-	ori	$2,$2,0x6667
-	mult	$4,$2				# Compute n * s
+	li	$2,1717960704			# Load r2 with 0x66660000
+	ori	$2,$2,0x6667			# Compute or of 0x66660000 and 0x00006667 to get 0x66666667 and store in r2
+	mult	$4,$2				# Compute 0x66666667 * n
 	mfhi	$2				
 	sra	$3,$2,2
 	sra	$2,$4,31
@@ -146,10 +146,10 @@ reverse_string:
 $L10:
 	# i < len/2
 	lw	$3,28($fp)		# Load r3 with len
-	sra	$2,$3,31		# Compute len / 2
-	srl	$2,$2,31	
-	addu	$2,$3,$2
-	sra	$3,$2,1
+	sra	$2,$3,31		# Set r2 to -1 if len is negative otherwise 0. Compute len / 2
+	srl	$2,$2,31		# Set r2 to 1 if len was negative otherwise 0
+	addu	$2,$3,$2		# Add len to r2
+	sra	$3,$2,1			# Set r3 to r2 divided by 2
 	lw	$2,0($fp)		# Load r2 with i
 	slt	$2,$2,$3		# Compute i < len / 2 and store in r2
 	bne	$2,$0,$L13		# Branch if result is not equal to zero
@@ -182,7 +182,7 @@ $L13:
 	sw	$2,4($fp)		# Store result in k
 	# i++
 	lw	$2,0($fp)		# Load r2 with i
-	addu	$2,$2,1			# Increment r2 
+	addu	$2,$2,1			# Increment r2
 	sw	$2,0($fp)		# Store r2 in i
 	j	$L10			# Loop back
 $L11:
