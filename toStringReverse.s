@@ -77,17 +77,17 @@ $L4:
 	li	$2,1717960704			# Load r2 with 0x66660000
 	ori	$2,$2,0x6667			# Compute or of 0x66660000 and 0x00006667 to get 0x66666667 and store in r2
 	mult	$4,$2				# Compute 0x66666667 * n
-	mfhi	$2				
-	sra	$3,$2,2
-	sra	$2,$4,31
-	subu	$3,$3,$2			# Compute n - s and store in r3
-	move	$2,$3				# Move n into r2
-	sll	$2,$2,2
-	addu	$2,$2,$3			# Compute n + s and store in r2
-	sll	$2,$2,1
-	subu	$2,$4,$2			# Compute n - s and store in r2
-	addu	$2,$2,48			# Add 48 to s and store in r2
-	sb	$2,0($6)			
+	mfhi	$2				# Store .4 * n in r2
+	sra	$3,$2,2				# Compute n/10 and store in r3 
+	sra	$2,$4,31			# Get sign bit of n and store in r2
+	subu	$3,$3,$2			# Round towards zero if negative
+	move	$2,$3				# Move n/10 into r2
+	sll	$2,$2,2				# Compute 4 * n/10
+	addu	$2,$2,$3			# Compute 5n/10 and store in r2
+	sll	$2,$2,1				# Compute 10n/10 and store in r2
+	subu	$2,$4,$2			# Compute n - 10n/10 and store in r2. r2 is n % 10
+	addu	$2,$2,48			# Add '0' to the modulo and store in r2
+	sb	$2,0($6)			# Store character in s[i]
 	addu	$5,$5,1				# Add 1 to n and store in r5
 	sw	$5,16($fp)			# Store r5 into n
 	lw	$4,32($fp)			# Load r4 with n
@@ -99,7 +99,7 @@ $L4:
 	sra	$2,$4,31
 	subu	$2,$3,$2			# Compute (n - s) - s and store in r2
 	sw	$2,32($fp)			# Store n into r2
-	bgtz	$2,$L4
+	bgtz	$2,$L4				# Branch if n is greater than zero
 	lw	$2,20($fp)			# Load r2 with sign
 	bgez	$2,$L8				# Branch if sign is greater than 0
 	lw	$3,16($fp)			# Load r3 with n
@@ -114,16 +114,16 @@ $L8:
 	lw	$2,36($fp)		# Load r2 with  n % 10
 	lw	$3,16($fp)		# Load r3 with n
 	addu	$2,$2,$3		# Add '0' to n % 10
-	sb	$0,0($2)
+	sb	$0,0($2)	
 	lw	$4,36($fp)		# Load lst parameter n into r4
 	lw	$5,16($fp)		# Load r5 with n
 	jal	reverse_string		# Call reverse string
 	move	$sp,$fp 		# Restore stack
-	lw	$31,28($sp)
-	lw	$fp,24($sp)
+	lw	$31,28($sp)		# Load return address
+	lw	$fp,24($sp)		
 	addu	$sp,$sp,32		# Add 32 to stack pointer
-	jr	$31
-	.end	itoa
+	jr	$31			
+	.end	itoa			# Return from itoa method
 #	.align	2
 	.globl	reverse_string
 	.ent	reverse_string
